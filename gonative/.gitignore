@@ -1,0 +1,3 @@
+# Keep binaries that are part of the package
+!TestNativeLibrary.dll
+!TestNativeLibrary.dylib
