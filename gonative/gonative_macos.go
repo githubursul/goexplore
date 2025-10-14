@@ -14,12 +14,6 @@ typedef void (*plog_callback)(int, const char*, int);
 typedef int (*pfactorial_proc)(int);
 typedef void (*pset_log_callback_proc)(plog_callback);
 
-extern void goLog(int level, char* message, int pii);
-
-void log_callback(int level, const char* message, int pii) {
-    goLog(level, (char*)message, pii);
-}
-
 int call_factorial_proc(pfactorial_proc f, int n) {
     if (f == NULL) {
         return 0;
@@ -108,19 +102,9 @@ func loadLibrary() (unsafe.Pointer, error) {
 	return dylibHandle, nil
 }
 
-//export goLog
-func goLog(level C.int, message *C.char, pii C.int) {
-	fmt.Printf("[Level %d]: %s\n", level, C.GoString(message))
-}
-
-func enableLogging() {
-	C.call_set_log_callback_proc((C.pset_log_callback_proc)(api.set_log_callback), (C.plog_callback)(C.log_callback))
-}
-
 // Exports
 func Factorial(n int) int {
 	initNativeAPI()
-	enableLogging()
 	result := int(C.call_factorial_proc((C.pfactorial_proc)(api.factorial), C.int(n)))
 	if result == 0 {
 		panic("Native DLL call failed")
