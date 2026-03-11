@@ -1,4 +1,4 @@
-//go:build darwin && arm64
+//go:build darwin && arm64 && !static
 
 package gonative
 
@@ -104,6 +104,7 @@ func loadLibrary() (unsafe.Pointer, error) {
 
 // Exports
 func Factorial(n int) int {
+	fmt.Println("I am a shared library version of Factorial")
 	initNativeAPI()
 	result := int(C.call_factorial_proc((C.pfactorial_proc)(api.factorial), C.int(n)))
 	if result == 0 {
